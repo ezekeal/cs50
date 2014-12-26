@@ -20,30 +20,26 @@ int main (int argc, char *argv[])
     }
     
     string cipher = argv[1];
-    int cipherNum[strlen(cipher)];
+
     // check string to see if each item is a character
-    for(i = 0, n = strlen(cipher); i < n; i++)
+    for(int i = 0, n = strlen(cipher); i < n; i++)
     {
         if(!isalpha(cipher[i]))
         {
             printf("Fool!\n");
             return 1;
         }
-        //creat a numerical version of the cipher
-        cipherNum[i] = (int) tolower(cipher[i]) -  (int) 'a';
+        cipher[i] = tolower(cipher[i]);
     }
     
     // get the phrase
     string text = GetString();
     
-    // TEST enter phrase for testing
-    text = "Meet me at the park at eleven am";
-    string solution = "Negh zf av huf pcfx bt gzrwep oz";
+    int cipherPos = 0;
     
     for(int i=0, n = strlen(text); i < n; i++)
     {
         char ch = text[i];
-        int cipherPos = 0;
 
         if(isalpha(ch))
         {   
@@ -53,14 +49,12 @@ int main (int argc, char *argv[])
             {
                 mod = (int) 'A';    
             }
-            ch = (char) (cipherNum[cipherPos % strlen(cipherNum)] + (int) ch - mod) % 26 + mod);
+            ch = (char) ( ( (int) cipher[cipherPos % strlen(cipher)] - (int) 'a' + (int) ch - mod ) % 26 + mod );
             cipherPos ++;
         }
         
         printf("%c", ch);
     }
-    printf("\n");
-    printf(solution):
     printf("\n");
 
     return 0;
