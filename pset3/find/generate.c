@@ -21,17 +21,17 @@
 
 int main(int argc, string argv[])
 {
-    // TODO: comment me
+    // if there aren't 2 or 3 args, display help and exit
     if (argc != 2 && argc != 3)
     {
         printf("Usage: ./generate n [s]\n");
         return 1;
     }
 
-    // TODO: comment me
+    // convert the arg string into an int
     int n = atoi(argv[1]);
 
-    // TODO: comment me
+    // if the the seed was provided use it, otherwise use cpu time
     if (argc == 3)
     {
         srand((unsigned int) atoi(argv[2]));
@@ -41,7 +41,7 @@ int main(int argc, string argv[])
         srand((unsigned int) time(NULL));
     }
 
-    // TODO: comment me
+    // print the requested amount of random numbers
     for (int i = 0; i < n; i++)
     {
         printf("%i\n", rand() % LIMIT);
