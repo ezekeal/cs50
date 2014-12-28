@@ -12,6 +12,40 @@
 #include "helpers.h"
 
 /**
+ * recursive search algorithm
+ */
+bool binary(int start, int end, int values[], int target)
+{
+    
+    int midIndex = (start + end) / 2;
+    int midValue = values[midIndex];
+
+    if (midValue == target)
+    {
+        return true;
+    }
+    else if (start == end || start + 1 == end) 
+    {
+        return false;
+    }
+    else if (midValue > target)
+    {
+        return binary(start, midIndex, values, target);
+    }
+    else if (midValue < target)
+    {
+        return binary(midIndex, end, values, target);
+    }
+    else
+    {
+        printf("something's wrong");
+        return false;
+    }
+}
+
+
+
+/**
  * Returns true if value is in array of n values, else false.
  */
 bool search(int value, int values[], int n)
@@ -20,16 +54,13 @@ bool search(int value, int values[], int n)
     {
         return false;
     }
-
-    for (int i = 0; i < n; i++)
+    
+    if (values[0] == value || values[n-1] == value)
     {
-        if (value == values[i])
-        {
-            return true;
-        }
+        return true;
     }
 
-    return false;
+    return binary(0, n-1, values, value);
 }
 
 /**
