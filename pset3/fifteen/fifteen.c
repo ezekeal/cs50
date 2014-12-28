@@ -31,6 +31,9 @@
 // board, whereby board[i][j] represents row i and column j
 int board[MAX][MAX];
 
+// index of x/y coordinates by tile value
+int tileLoc[MAX * MAX][2];
+
 // board's dimension
 int d;
 
@@ -42,6 +45,7 @@ void draw(void);
 bool move(int tile);
 bool won(void);
 void save(void);
+void swap(int tileA, int tileB);
 
 int main(int argc, string argv[])
 {
@@ -51,7 +55,7 @@ int main(int argc, string argv[])
     // ensure proper usage
     if (argc != 2)
     {
-        printf("Usage: ./fifteen d\n");
+        printf("Usage: ./fifteen [int](the length/width of the square board)\n");
         return 1;
     }
 
@@ -131,7 +135,26 @@ void greet(void)
  */
 void init(void)
 {
-    // TODO
+    int tile = d * d - 1;
+    // iterate rows
+    for(int j=0; j<d; j++)
+    {
+        // iterate columns
+        for(int i=0; i<d; i++)
+        {
+            board[i][j] = tile;
+            tileLoc[tile][0] = i;
+            tileLoc[tile][1] = j;
+            tile--;
+        }
+    }
+    //swap 1 and 2 if the board has even dimensions
+    if(d%2 == 0)
+    {
+        swap(1,2);
+    }
+
+    return;
 }
 
 /**
@@ -139,7 +162,29 @@ void init(void)
  */
 void draw(void)
 {
-    // TODO
+    for(int j=0; j<d; j++)
+    {
+        for (int i=0; i<d; i++)
+        {
+            int num = board[i][j];
+            if (num == 0)
+            {
+                printf("_  ");
+            }
+            else if (num > 9)
+            {
+                printf("%d ", num);
+            }
+            else
+            {
+                printf("%d  ", num);
+            }
+        }
+        printf("\n");
+    }
+
+    printf("\n");
+    return;
 }
 
 /**
@@ -147,9 +192,77 @@ void draw(void)
  * returns false. 
  */
 bool move(int tile)
-{
-    // TODO
+{    
+    // test to see if tile is in bounds
+    if(tile < 1 || tile > d*d-1)
+    {
+        return false;
+    }
+    
+    // get tile coordinates
+    int tileX = tileLoc[tile][0]; 
+    int tileY = tileLoc[tile][1];
+
+    // test each direction
+    // up
+    if (tileY-1 >= 0)
+    {
+        if(board[tileX][tileY-1] == 0)
+        {
+            swap(tile, 0);
+            return true;
+        }
+    }
+    // down
+    if (tileY+1 < d)
+    {
+        if(board[tileX][tileY+1] == 0)
+        {
+            swap(tile, 0);
+            return true;
+        }
+    }
+    // left
+    if (tileX-1 >= 0)
+    {
+        if(board[tileX-1][tileY] == 0)
+        {
+            swap(tile, 0);
+            return true;
+        }
+    }
+    // right
+    if (tileX+1 < d)
+    {
+        if(board[tileX+1][tileY] == 0)
+        {
+            swap(tile, 0);
+            return true;
+        }
+    }
+   
+    //if not adjacent return false
     return false;
+}
+
+/**
+ * Swaps two tiles
+ */
+void swap(int tileA, int tileB)
+{
+    int xA = tileLoc[tileA][0];
+    int yA = tileLoc[tileA][1];
+    int xB = tileLoc[tileB][0];
+    int yB = tileLoc[tileB][1];
+    //update index
+    tileLoc[tileA][0] = xB;
+    tileLoc[tileA][1] = yB;
+    tileLoc[tileB][0] = xA;
+    tileLoc[tileB][1] = yA;
+    //update board
+    board[xA][yA] = tileB;
+    board[xB][yB] = tileA;
+    return;
 }
 
 /**
@@ -158,7 +271,22 @@ bool move(int tile)
  */
 bool won(void)
 {
-    // TODO
+    int tile = 1;
+    for(int i=0; i<d; i++)
+    {
+        for (int j=0; j<d; j++)
+        {   if(i == d-1 && j == d-1)
+            {
+                return true;
+            }
+            if(board[j][i] != tile)
+            {
+                return false;
+            }
+            tile++;
+        }
+    }
+    printf("something's wrong");
     return false;
 }
 
@@ -209,3 +337,4 @@ void save(void)
     // close log
     fclose(p);
 }
+
