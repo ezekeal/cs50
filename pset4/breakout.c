@@ -33,6 +33,9 @@
 // lives
 #define LIVES 3
 
+// colors
+char*  COLORS[7] = {"RED", "ORANGE", "YELLOW", "GREEN", "CYAN", "BLUE", "MAGENTA"};
+
 // prototypes
 void initBricks(GWindow window);
 GOval initBall(GWindow window);
@@ -119,7 +122,31 @@ int main(void)
  */
 void initBricks(GWindow window)
 {
-    // TODO
+    // set brick dimensions based on enclosing window
+    double bW = (0.8 * WIDTH)/ COLS;
+    double bH = (0.6 * (HEIGHT / 4)) / ROWS;
+    double bWp = (0.2 * WIDTH) / (COLS +1); 
+    double bHp = (0.4 * (HEIGHT / 4)) / (ROWS + 1);
+    // starting x and y location
+    double x = 0, y = 0;
+
+    // instantiate bricks based on ROWS and COLS constants
+    for(int i=0; i<ROWS; i++)
+    {
+        y += bHp;
+        x = 0;
+        for(int j=0; j<COLS; j++)
+        {
+            x += bWp;
+            GRect brick = newGRect(x,y, bW, bH);
+            setFilled(brick, true);
+            string bC = COLORS[(int)(i+j) % 7];
+            setColor(brick, bC);
+            add(window, brick);
+            x += bW;
+        }
+        y += bH;
+    }
 }
 
 /**
@@ -127,8 +154,15 @@ void initBricks(GWindow window)
  */
 GOval initBall(GWindow window)
 {
-    // TODO
-    return NULL;
+    // get coordinates for the center
+    double x = WIDTH / 2;
+    double y = HEIGHT / 2;
+
+    GOval b = newGOval(x,y,RADIUS, RADIUS);
+    setFilled(b, true);
+    setColor(b, "BLACK");
+    add(window, b);
+    return b;
 }
 
 /**
